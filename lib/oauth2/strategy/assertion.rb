@@ -54,13 +54,18 @@ module OAuth2
          :assertion      => assertion,
          :scope          => params[:scope],
         }.merge(client_params)
+
+        {:grant_type     => 'urn:ietf:params:oauth:grant-type:jwt-bearer',
+         :assertion      => assertion
+        }
       end
 
       def build_assertion(params)
         claims = {:iss => params[:iss],
                   :aud => params[:aud],
-                  :prn => params[:prn],
+                  :scope => "",
                   :exp => params[:exp],
+                  :iat => params[:iat]
                  }
         if params[:hmac_secret]
           JWT.encode(claims, params[:hmac_secret], 'HS256')
